@@ -1,0 +1,20 @@
+---
+
+- name: Collect current timestamp
+  shell: date +%d%b-%Y
+  register: timestamp
+  tags: create_snapshot_with_current_date
+
+
+- name: Make a cassandra snapshot on all nodes for single table with specific name (tag)
+  become: true
+  ansible.builtin.shell:
+    cmd: nodetool -h localhost -u admin -pw 1234asDD snapshot -t snp-{{ timestamp.stdout }}-big.data.user big_data.user
+  tags: create_snapshot_with_current_date   
+  
+
+- name: Copy newly created snapshot to another disk
+  become: true
+  ansible.builtin.shell:
+    cmd: cp -pr /data/data/big_data/user-e329ca707fad11ed86c7ab6e41fb7c23/snapshots/snp-{{ timestamp.stdout }}-big.data.user /cas_snapshots/
+  tags: create_snapshot_with_current_date  

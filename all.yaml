@@ -1,0 +1,6 @@
+---
+
+- name: Entrypoint for all roles
+  hosts: all
+  roles:
+    - cassandra-backup
